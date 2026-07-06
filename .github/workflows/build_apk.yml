@@ -1,0 +1,30 @@
+name: Build Android APK
+
+# Push this repo to GitHub, then check the "Actions" tab - this workflow
+# runs automatically and gives you a downloadable, real, installable APK
+# under the run's "Artifacts" section. No local Flutter/Android install
+# needed on your machine.
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+
+      - run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hello-home-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
